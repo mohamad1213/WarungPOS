@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex-1 overflow-y-auto p-4 sm:p-8 bg-surface flex items-center justify-center">
+    <div class="w-full max-w-lg bg-white p-8 rounded-2xl shadow-sm border-2 border-gray-100">
+        <div class="mb-6">
+            <h1 class="font-headline-lg text-on-surface">{{ title }}</h1>
+            <p class="text-on-surface-variant font-body-md mt-1">Lengkapi informasi produk di bawah ini.</p>
+        </div>
+        
+        <form method="POST" class="space-y-5">
+            {% csrf_token %}
+            
+            <div>
+                <label class="block font-label-lg mb-2 text-on-surface">Nama Produk</label>
+                <input type="text" name="nama" value="{{ produk.nama }}" required class="w-full h-12 px-4 rounded-xl border-2 border-outline focus:border-primary focus:ring-0 font-semibold transition-all">
+            </div>
+            
+            <div>
+                <label class="block font-label-lg mb-2 text-on-surface">Kategori</label>
+                <select name="kategori" required class="w-full h-12 px-4 rounded-xl border-2 border-outline focus:border-primary focus:ring-0 font-semibold transition-all">
+                    <option value="makanan" {% if produk.kategori == 'makanan' %}selected{% endif %}>Makanan</option>
+                    <option value="minuman" {% if produk.kategori == 'minuman' %}selected{% endif %}>Minuman</option>
+                    <option value="lainnya" {% if produk.kategori == 'lainnya' %}selected{% endif %}>Lainnya</option>
+                </select>
+            </div>
+            
+            <div>
+                <label class="block font-label-lg mb-2 text-on-surface">Harga Jual (Rp)</label>
+                <input type="number" name="harga" value="{{ produk.harga|floatformat:0 }}" required min="0" step="100" class="w-full h-12 px-4 rounded-xl border-2 border-outline focus:border-primary focus:ring-0 font-semibold transition-all">
+            </div>
+            
+            <div class="pt-4 flex gap-3">
+                <a href="{% url 'produk' %}" class="flex-1 h-12 flex items-center justify-center rounded-xl font-bold border-2 border-gray-200 text-gray-600 hover:bg-gray-50 transition-all">Batal</a>
+                <button type="submit" class="flex-1 h-12 flex items-center justify-center rounded-xl font-bold bg-primary text-white hover:brightness-110 active:scale-95 transition-all shadow-md">Simpan Produk</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

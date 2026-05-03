@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Riwayat Hari Ini{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-bold">Riwayat Transaksi</h3>
+            <span class="badge bg-primary fs-6">{{ today|date:"d M Y" }}</span>
+        </div>
+
+        <div class="card mb-4 border-0 shadow-sm bg-success text-white">
+            <div class="card-body text-center py-4">
+                <h5 class="mb-2">Total Pemasukan Hari Ini</h5>
+                <h1 class="fw-bold mb-0">Rp{{ total_pemasukan|floatformat:0|intcomma }}</h1>
+                <small class="text-white-50">(Hanya status 'Bayar')</small>
+            </div>
+        </div>
+
+        <div class="list-group shadow-sm">
+            {% for trx in transaksi_list %}
+            <div class="list-group-item list-group-item-action p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="mb-0 fw-bold">
+                        {% if trx.customer %}{{ trx.customer.nama }}{% else %}Umum{% endif %}
+                    </h5>
+                    <h5 class="mb-0 text-success fw-bold">Rp{{ trx.total|floatformat:0|intcomma }}</h5>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">{{ trx.tanggal|time:"H:i" }} WIB</small>
+                    {% if trx.status == 'bayar' %}
+                    <span class="badge bg-success rounded-pill">Lunas</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark rounded-pill">Nanti</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center p-5 text-muted bg-white rounded shadow-sm">
+                <h5>Belum ada transaksi hari ini</h5>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

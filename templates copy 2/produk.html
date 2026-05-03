@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex-1 overflow-hidden flex flex-col">
+    <!-- Main Content Canvas -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-8 bg-surface">
+        <div class="max-w-[1440px] mx-auto">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                <div>
+                    <h1 class="font-headline-md text-on-surface">Daftar Inventaris</h1>
+                    <p class="font-body-sm text-on-surface-variant">Kelola stok dan harga barang dagangan Anda</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{% url 'kasir' %}" class="bg-primary-container/10 text-primary h-10 px-5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary-container/20 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined text-lg" data-icon="point_of_sale">point_of_sale</span>
+                        Buka Kasir
+                    </a>
+                    <a href="{% url 'tambah_produk' %}" class="bg-primary text-white h-10 px-5 rounded-lg font-bold text-sm flex items-center justify-center gap-2 hover:bg-primary-container active:scale-95 transition-all shadow-sm">
+                        <span class="material-symbols-outlined text-lg" data-icon="add_circle">add_circle</span>
+                        Tambah Produk
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-xl border-2 border-gray-100 flex items-center gap-4 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-700">
+                        <span class="material-symbols-outlined text-2xl" data-icon="inventory">inventory</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Produk</p>
+                        <p class="text-2xl font-black text-gray-900">{{ total_produk }}</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-2 border-gray-100 flex items-center gap-4 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+                        <span class="material-symbols-outlined text-2xl" data-icon="trending_up">trending_up</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stok Aman</p>
+                        <p class="text-2xl font-black text-gray-900">{{ stok_aman }}</p>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-xl border-2 border-gray-100 flex items-center gap-4 shadow-sm">
+                    <div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined text-2xl" data-icon="warning">warning</span>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Stok Menipis</p>
+                        <p class="text-2xl font-black text-gray-900">{{ stok_menipis }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Table Container -->
+            <div class="bg-white rounded-xl border-2 border-gray-100 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-gray-50/50 border-b-2 border-gray-100">
+                                <th class="px-4 py-3 font-bold text-gray-500 uppercase tracking-wider text-xs">Produk</th>
+                                <th class="px-4 py-3 font-bold text-gray-500 uppercase tracking-wider text-xs">Kategori</th>
+                                <th class="px-4 py-3 font-bold text-gray-500 uppercase tracking-wider text-xs">Harga Jual</th>
+                                <th class="px-4 py-3 font-bold text-gray-500 uppercase tracking-wider text-xs">Stok</th>
+                                <th class="px-4 py-3 font-bold text-gray-500 uppercase tracking-wider text-xs text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y-2 divide-gray-50">
+                            {% for produk in produks %}
+                            <tr class="hover:bg-blue-50/30 transition-colors">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-lg overflow-hidden border-2 border-gray-100 bg-gradient-to-br from-blue-100 to-indigo-200 shrink-0 flex items-center justify-center text-primary font-bold text-sm">
+                                            {{ produk.nama|slice:":2"|upper }}
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-gray-900 leading-tight">{{ produk.nama }}</p>
+                                            <p class="text-[10px] text-gray-500 font-mono">ID-{{ produk.id|stringformat:"03d" }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-0.5 bg-surface-container rounded text-xs font-bold text-primary capitalize">{{ produk.kategori }}</span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <p class="font-bold text-primary">Rp {{ produk.harga|floatformat:0 }}</p>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="text-xs font-bold text-secondary bg-secondary-container/30 px-2 py-0.5 rounded">Tersedia</span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex justify-end gap-1">
+                                        <a href="{% url 'edit_produk' produk.id %}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary-container text-gray-400 hover:text-primary transition-all">
+                                            <span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+                                        </a>
+                                        <a href="{% url 'hapus_produk' produk.id %}" class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-error-container text-gray-400 hover:text-error transition-all">
+                                            <span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="px-4 py-8 text-center text-gray-400 text-sm">
+                                    Belum ada produk. Silakan tambah produk baru.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

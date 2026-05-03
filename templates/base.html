@@ -1,0 +1,341 @@
+{% load static %}
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}Warung Ibu{% endblock %}</title>
+    <link rel="manifest" href="{% static 'manifest.json' %}" />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "outline-variant": "#c3c6d6",
+              "error-container": "#ffdad6",
+              "tertiary-fixed": "#ffdad6",
+              "surface-container": "#e9edff",
+              background: "#f9f9ff",
+              "surface-dim": "#d3daef",
+              tertiary: "#8c0009",
+              "on-background": "#141b2b",
+              "surface-container-highest": "#dce2f7",
+              "surface-variant": "#dce2f7",
+              "surface-container-high": "#e1e8fd",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#410002",
+              "on-secondary-container": "#00734f",
+              "on-secondary-fixed": "#002114",
+              "secondary-fixed": "#96f6c8",
+              "surface-bright": "#f9f9ff",
+              "tertiary-fixed-dim": "#ffb4ab",
+              "on-tertiary-container": "#ffc5be",
+              outline: "#737685",
+              "on-primary-container": "#c4d2ff",
+              "inverse-primary": "#b2c5ff",
+              "on-secondary-fixed-variant": "#005137",
+              "on-surface": "#141b2b",
+              "secondary-fixed-dim": "#7ad9ad",
+              "surface-container-lowest": "#ffffff",
+              "inverse-on-surface": "#edf0ff",
+              "tertiary-container": "#b90010",
+              "surface-container-low": "#f1f3ff",
+              "on-tertiary-fixed-variant": "#93000a",
+              primary: "#003d9b",
+              "on-primary-fixed-variant": "#0040a2",
+              "on-primary-fixed": "#001848",
+              "primary-fixed-dim": "#b2c5ff",
+              "on-secondary": "#ffffff",
+              "primary-container": "#0052cc",
+              "on-tertiary": "#ffffff",
+              secondary: "#006c4b",
+              "on-surface-variant": "#434654",
+              error: "#ba1a1a",
+              surface: "#f9f9ff",
+              "secondary-container": "#96f6c8",
+              "on-primary": "#ffffff",
+              "inverse-surface": "#293040",
+              "on-error": "#ffffff",
+              "surface-tint": "#0c56d0",
+              "primary-fixed": "#dae2ff",
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+            spacing: {
+              "section-gap": "2rem",
+              "container-margin": "1.25rem",
+              "button-height": "4rem",
+              "touch-padding": "1.5rem",
+              "stack-gap": "1rem",
+            },
+            fontFamily: {
+              "label-lg": ["Public Sans"],
+              "headline-md": ["Public Sans"],
+              "price-display": ["Public Sans"],
+              "headline-lg": ["Public Sans"],
+              "body-lg": ["Public Sans"],
+              "body-md": ["Public Sans"],
+            },
+            fontSize: {
+              "label-lg": [
+                "16px",
+                {
+                  lineHeight: "20px",
+                  letterSpacing: "0.02em",
+                  fontWeight: "600",
+                },
+              ],
+              "headline-md": [
+                "24px",
+                { lineHeight: "32px", fontWeight: "700" },
+              ],
+              "price-display": [
+                "40px",
+                { lineHeight: "48px", fontWeight: "800" },
+              ],
+              "headline-lg": [
+                "32px",
+                { lineHeight: "40px", fontWeight: "700" },
+              ],
+              "body-lg": ["20px", { lineHeight: "28px", fontWeight: "500" }],
+              "body-md": ["18px", { lineHeight: "26px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Public Sans", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .active-nav {
+        position: relative;
+        color: #003d9b;
+      }
+      /* Desktop active indicator */
+      @media (min-width: 768px) {
+        .active-nav::after {
+          content: "";
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background-color: #003d9b;
+          border-radius: 999px;
+        }
+      }
+      /* Mobile active indicator styling */
+      .mobile-active {
+        color: #003d9b;
+        background-color: #e9edff;
+        font-weight: 800;
+      }
+    </style>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body
+    class="bg-surface text-on-surface flex flex-col h-screen overflow-hidden pb-16 md:pb-0"
+  >
+    <!-- Navbar (Pinned to top, Full width) -->
+    <header
+      class="w-full bg-white border-b-2 border-gray-200 sticky top-0 z-[100]"
+    >
+      <div
+        class="w-full px-4 md:px-6 h-16 md:h-20 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-10">
+          <!-- Brand Logo -->
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-primary-container flex items-center justify-center text-white"
+            >
+              <span
+                class="material-symbols-outlined text-sm md:text-base"
+                data-icon="store"
+                >store</span
+              >
+            </div>
+            <div>
+              <h2
+                class="font-public-sans font-bold text-base md:text-lg leading-tight text-gray-900"
+              >
+                Warung Ibu
+              </h2>
+              <p
+                class="text-[8px] md:text-[10px] text-gray-500 uppercase tracking-wider font-bold"
+              >
+                Small Shop Manager
+              </p>
+            </div>
+          </div>
+
+          <!-- Navigation Links (Desktop Only) -->
+          <nav class="hidden md:flex items-center gap-2 h-20">
+            {% url 'kasir' as kasir_url %} {% url 'produk' as produk_url %} 
+            {% url 'riwayat' as riwayat_url %} {% url 'laporan' as laporan_url %}
+
+            <a
+              class="flex items-center gap-2 px-4 h-full transition-colors font-semibold {% if request.path == kasir_url %}active-nav font-bold{% else %}text-gray-600 hover:text-primary{% endif %}"
+              href="{{ kasir_url }}"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="point_of_sale"
+                >point_of_sale</span
+              >
+              <span>Kasir</span>
+            </a>
+            <a
+              class="flex items-center gap-2 px-4 h-full transition-colors font-semibold {% if request.path == produk_url %}active-nav font-bold{% else %}text-gray-600 hover:text-primary{% endif %}"
+              href="{{ produk_url }}"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="inventory_2"
+                >inventory_2</span
+              >
+              <span>Produk</span>
+            </a>
+            <a
+              class="flex items-center gap-2 px-4 h-full transition-colors font-semibold {% if request.path == riwayat_url %}active-nav font-bold{% else %}text-gray-600 hover:text-primary{% endif %}"
+              href="{{ riwayat_url }}"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="history_edu"
+                >history_edu</span
+              >
+              <span>Riwayat</span>
+            </a>
+            <a
+              class="flex items-center gap-2 px-4 h-full transition-colors font-semibold {% if request.path == laporan_url %}active-nav font-bold{% else %}text-gray-600 hover:text-primary{% endif %}"
+              href="{{ laporan_url }}"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="assessment"
+                >assessment</span
+              >
+              <span>Laporan</span>
+            </a>
+          </nav>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-4">
+          <div class="relative hidden lg:block">
+            <input
+              class="w-64 h-11 pl-10 pr-4 rounded-lg border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-primary focus:ring-0 text-sm transition-all"
+              placeholder="Cari..."
+              type="text"
+            />
+            <span
+              class="material-symbols-outlined absolute left-3 top-2.5 text-gray-400"
+              data-icon="search"
+              >search</span
+            >
+          </div>
+          <div
+            class="flex items-center gap-1 md:gap-2 md:border-l-2 border-gray-100 md:pl-4"
+          >
+            <button
+              class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-all text-gray-600 hidden sm:flex"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="settings"
+                >settings</span
+              >
+            </button>
+            <button
+              class="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full bg-primary-container text-white active:scale-95 transition-transform"
+            >
+              <span
+                class="material-symbols-outlined text-[20px]"
+                data-icon="account_circle"
+                >account_circle</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Canvas -->
+    <main
+      class="flex-1 flex flex-col h-full bg-surface-container-low overflow-hidden"
+    >
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bottom Navigation Bar (Mobile Only) -->
+    <nav
+      class="md:hidden fixed bottom-0 left-0 w-full bg-white border-t-2 border-gray-200 z-[100] flex items-center justify-around h-16 px-2 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]"
+    >
+      {% url 'kasir' as kasir_url %} {% url 'produk' as produk_url %} {% url 'riwayat' as riwayat_url %} {% url 'laporan' as laporan_url %}
+
+      <a
+        href="{{ kasir_url }}"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 rounded-xl {% if request.path == kasir_url %}mobile-active{% else %}text-gray-500{% endif %} transition-colors"
+      >
+        <span class="material-symbols-outlined text-[22px]">point_of_sale</span>
+        <span class="text-[10px] font-bold">Kasir</span>
+      </a>
+      <a
+        href="{{ produk_url }}"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 rounded-xl {% if request.path == produk_url %}mobile-active{% else %}text-gray-500{% endif %} transition-colors"
+      >
+        <span class="material-symbols-outlined text-[22px]">inventory_2</span>
+        <span class="text-[10px] font-bold">Produk</span>
+      </a>
+      <a
+        href="{{ riwayat_url }}"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 rounded-xl {% if request.path == riwayat_url %}mobile-active{% else %}text-gray-500{% endif %} transition-colors"
+      >
+        <span class="material-symbols-outlined text-[22px]">history_edu</span>
+        <span class="text-[10px] font-bold">Riwayat</span>
+      </a>
+      <a
+        href="{{ laporan_url }}"
+        class="flex flex-col items-center justify-center w-full h-full gap-1 rounded-xl {% if request.path == laporan_url %}mobile-active{% else %}text-gray-500{% endif %} transition-colors"
+      >
+        <span class="material-symbols-outlined text-[22px]">assessment</span>
+        <span class="text-[10px] font-bold">Laporan</span>
+      </a>
+    </nav>
+
+    {% block extra_js %}{% endblock %}
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/static/js/service-worker.js")
+          .then(function () {
+            console.log("Service Worker Registered");
+          });
+      }
+    </script>
+  </body>
+</html>

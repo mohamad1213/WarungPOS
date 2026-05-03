@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex-1 overflow-hidden flex flex-col">
+    <!-- Sub-header Area -->
+    <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <h2 class="text-xl font-black text-gray-900 font-public-sans tracking-tight">Laporan Mingguan</h2>
+            <div class="flex items-center gap-3">
+                <form method="GET" class="flex items-center gap-2">
+                    <input type="date" name="start_date" value="{{ start_date }}" class="text-xs px-2 py-1.5 border-2 border-gray-200 rounded-md focus:border-primary">
+                    <span class="text-xs text-gray-500">-</span>
+                    <input type="date" name="end_date" value="{{ end_date }}" class="text-xs px-2 py-1.5 border-2 border-gray-200 rounded-md focus:border-primary">
+                    <button type="submit" class="bg-surface-container-high text-on-surface px-3 py-1.5 rounded-md text-xs font-bold border border-outline-variant hover:bg-gray-100">Filter</button>
+                </form>
+                <button onclick="window.print()" class="bg-primary text-white px-4 py-1.5 rounded-md text-xs font-bold flex items-center gap-1.5 active:scale-95 transition-transform print-hide">
+                    <span class="material-symbols-outlined text-[14px]">print</span>
+                    Cetak
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <section class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div class="max-w-[1440px] mx-auto space-y-4">
+            
+            <!-- Summary Bento Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 print-hide">
+                <!-- Total Lunas Card -->
+                <div class="bg-white border-2 border-gray-100 rounded-xl p-5 flex justify-between items-center shadow-sm">
+                    <div class="space-y-1">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Lunas</p>
+                        <h3 class="text-secondary font-black text-2xl">Rp {{ total_lunas|floatformat:0 }}</h3>
+                    </div>
+                    <div class="w-12 h-12 bg-secondary-container rounded-lg flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-2xl">check_circle</span>
+                    </div>
+                </div>
+                <!-- Belum Bayar Card -->
+                <div class="bg-white border-2 border-primary/50 rounded-xl p-5 flex justify-between items-center shadow-sm">
+                    <div class="space-y-1">
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Belum Bayar</p>
+                        <h3 class="text-error font-black text-2xl">Rp {{ total_belum_bayar|floatformat:0 }}</h3>
+                        <p class="text-xs font-bold text-gray-500">{{ total_trx_tertunda }} Transaksi tertunda</p>
+                    </div>
+                    <div class="w-12 h-12 bg-error-container rounded-lg flex items-center justify-center text-error">
+                        <span class="material-symbols-outlined text-2xl">pending_actions</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Table Section -->
+            <div class="bg-white border-2 border-gray-100 rounded-xl overflow-hidden shadow-sm">
+                <div class="px-4 py-3 border-b-2 border-gray-100 flex justify-between items-center">
+                    <h4 class="font-bold text-gray-900 text-sm">Rincian Per Pelanggan</h4>
+                    <div class="flex items-center gap-2 print-hide">
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-outline text-[14px]">search</span>
+                            <input class="pl-8 pr-3 py-1.5 border border-gray-200 rounded-md focus:border-primary outline-none text-xs w-48" placeholder="Cari pelanggan..." type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead class="bg-gray-50 text-gray-500 uppercase font-bold tracking-wider text-[10px]">
+                            <tr>
+                                <th class="px-4 py-2 border-b-2 border-gray-100">Nama Pelanggan</th>
+                                <th class="px-4 py-2 border-b-2 border-gray-100 text-center">Trx</th>
+                                <th class="px-4 py-2 border-b-2 border-gray-100 text-right">Total Transaksi</th>
+                                <th class="px-4 py-2 border-b-2 border-gray-100 text-right">Total Piutang</th>
+                                <th class="px-4 py-2 border-b-2 border-gray-100 text-center">Status Pembayaran</th>
+                                <th class="px-4 py-2 border-b-2 border-gray-100 text-right print-hide">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for report in customers_report %}
+                            <tr class="hover:bg-blue-50/20 transition-colors {% if report.total_piutang > 0 %}border-l-4 border-l-error{% endif %}">
+                                <td class="px-4 py-3 font-bold text-gray-900">{{ report.nama }}</td>
+                                <td class="px-4 py-3 text-center font-bold text-gray-500">{{ report.total_trx }}</td>
+                                <td class="px-4 py-3 text-right font-bold text-primary">Rp {{ report.total_nominal|floatformat:0 }}</td>
+                                <td class="px-4 py-3 text-right font-bold {% if report.total_piutang > 0 %}text-error{% else %}text-gray-400{% endif %}">
+                                    {% if report.total_piutang > 0 %}
+                                        Rp {{ report.total_piutang|floatformat:0 }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    {% if report.total_piutang > 0 %}
+                                        <span class="inline-flex items-center gap-1 bg-error-container text-error px-2 py-0.5 rounded text-[10px] font-bold">
+                                            <span class="material-symbols-outlined text-[12px]">schedule</span> BELUM LUNAS
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center gap-1 bg-secondary-container text-secondary px-2 py-0.5 rounded text-[10px] font-bold">
+                                            <span class="material-symbols-outlined text-[12px]">check</span> LUNAS
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3 text-right print-hide flex items-center justify-end gap-2">
+                                    <!-- Toggle Switch untuk Pelunasan (Hanya muncul jika ada piutang) -->
+                                    {% if report.total_piutang > 0 %}
+                                        <form method="POST" action="{% url 'lunasi_piutang_customer' report.id %}" onsubmit="return confirm('Tandai SEMUA piutang Rp {{ report.total_piutang|floatformat:0 }} atas nama {{ report.nama }} menjadi LUNAS?');" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="bg-secondary text-white px-2 py-1 rounded text-[10px] font-bold hover:bg-green-700 transition-colors flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[12px]">task_alt</span> Lunas?
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    
+                                    <a href="{% url 'cetak_laporan_customer' report.id %}" target="_blank" class="text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded border border-blue-200 transition-colors inline-flex items-center gap-1 text-[10px] font-bold">
+                                        <span class="material-symbols-outlined text-[12px]">print</span> Cetak
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-4 py-8 text-center text-gray-400 text-xs font-bold">
+                                    Belum ada data pelanggan pada periode ini.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Print Styles override to hide non-printable elements -->
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .overflow-hidden {
+            overflow: visible !important;
+        }
+        .max-w-\[1440px\] {
+            max-w: 100% !important;
+        }
+        table, table * {
+            visibility: visible;
+        }
+        table {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+        .print-hide {
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
