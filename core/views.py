@@ -54,26 +54,33 @@ def riwayat_transaksi(request):
     today = timezone.localtime().date()
     
     status_filter = request.GET.get('status', 'semua')
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
+    date_range_str = request.GET.get('date_range')
 
     # Base query
     transaksi = Transaksi.objects.all()
 
-    if start_date and end_date:
+    if date_range_str and ' to ' in date_range_str:
         try:
-            start = datetime.strptime(start_date, '%Y-%m-%d').date()
-            end = datetime.strptime(end_date, '%Y-%m-%d').date()
+            start_str, end_str = date_range_str.split(' to ')
+            start = datetime.strptime(start_str, '%Y-%m-%d').date()
+            end = datetime.strptime(end_str, '%Y-%m-%d').date()
         except ValueError:
             start = today - timedelta(days=7)
             end = today
-            start_date = start.strftime('%Y-%m-%d')
-            end_date = end.strftime('%Y-%m-%d')
+            date_range_str = f"{start.strftime('%Y-%m-%d')} to {end.strftime('%Y-%m-%d')}"
+    elif date_range_str:
+        try:
+            # Fallback if only one date is somehow submitted
+            start = datetime.strptime(date_range_str, '%Y-%m-%d').date()
+            end = start
+        except ValueError:
+            start = today - timedelta(days=7)
+            end = today
+            date_range_str = f"{start.strftime('%Y-%m-%d')} to {end.strftime('%Y-%m-%d')}"
     else:
         start = today - timedelta(days=7)
         end = today
-        start_date = start.strftime('%Y-%m-%d')
-        end_date = end.strftime('%Y-%m-%d')
+        date_range_str = f"{start.strftime('%Y-%m-%d')} to {end.strftime('%Y-%m-%d')}"
 
     # Bugfix MySQL cPanel: gunakan range datetime agar tidak bergantung pada fungsi CONVERT_TZ MySQL
     start_dt = timezone.make_aware(datetime.combine(start, datetime.min.time()))
@@ -92,12 +99,11 @@ def riwayat_transaksi(request):
     total_piutang = transaksi.filter(status='nanti').aggregate(Sum('total'))['total__sum'] or 0
 
     context = {
-        'transaksi_list': transaksi,
+        'transaksi_list': transaksi ,
         'total_pemasukan': total_pemasukan,
         'total_piutang': total_piutang,
         'status_filter': status_filter,
-        'start_date': start_date,
-        'end_date': end_date,
+        'date_range': date_range_str,
         'total_transaksi': transaksi.count(),
     }
     return render(request, 'riwayat.html', context)

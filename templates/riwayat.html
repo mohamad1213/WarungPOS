@@ -19,35 +19,51 @@
     <section class="flex-1 overflow-y-auto p-4 space-y-4">
         <div class="max-w-[1440px] mx-auto space-y-4">
             
-            <!-- Filters & Controls -->
-            <form method="GET" action="{% url 'riwayat' %}" class="flex flex-col md:flex-row md:items-end justify-between gap-4 bg-white p-4 border-2 border-gray-200 rounded-xl shadow-sm">
-                <div class="space-y-2 flex-1">
-                    <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Filter Status</p>
-                    <div class="flex flex-wrap gap-2">
-                        <button type="submit" name="status" value="semua" class="px-4 py-1.5 rounded-lg border-2 {% if status_filter == 'semua' %}border-primary bg-primary text-white shadow-sm{% else %}border-gray-200 text-gray-700 hover:border-primary{% endif %} text-sm font-bold transition-all">Semua</button>
-                        
-                        <button type="submit" name="status" value="lunas" class="px-4 py-1.5 rounded-lg border-2 {% if status_filter == 'lunas' %}border-primary bg-primary text-white shadow-sm{% else %}border-gray-200 text-gray-700 hover:border-primary{% endif %} text-sm font-bold transition-all">Lunas</button>
-                        
-                        <button type="submit" name="status" value="piutang" class="px-4 py-1.5 rounded-lg border-2 {% if status_filter == 'piutang' %}border-primary bg-primary text-white shadow-sm{% else %}border-gray-200 text-gray-700 hover:border-primary{% endif %} text-sm font-bold transition-all">Piutang</button>
+            <!-- Filter Toggle Button (Always visible) -->
+            <div class="flex justify-end">
+                <button type="button" onclick="document.getElementById('filter-section').classList.toggle('hidden')" class="bg-white border-2 border-gray-200 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-gray-50 shadow-sm transition-colors text-gray-700">
+                    <span class="material-symbols-outlined text-sm">filter_list</span>
+                    Filter Tanggal & Status
+                </button>
+            </div>
+
+            <!-- Filters & Controls (Hidden by default) -->
+            <div id="filter-section" class="hidden transition-all duration-300 origin-top">
+                <form method="GET" action="{% url 'riwayat' %}" class="flex flex-col gap-4 bg-white p-4 border-2 border-gray-200 rounded-xl shadow-sm">
+                    <!-- Date Range Input (Single Input via Flatpickr) -->
+                    <div class="flex flex-col gap-1 w-full">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Periode Tanggal (Pilih Rentang)</label>
+                        <input id="date-range-picker" name="date_range" type="text" value="{{ date_range }}" class="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium w-full md:max-w-sm cursor-pointer bg-gray-50" placeholder="Pilih rentang tanggal" readonly="readonly" />
                     </div>
-                </div>
-                <div class="flex flex-col sm:flex-row gap-3 items-end">
-                    <div class="flex flex-col gap-1 w-full sm:w-auto">
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Dari Tanggal</label>
-                        <input name="start_date" type="date" value="{{ start_date }}" class="px-3 py-1.5 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium" />
+
+                    <!-- Status Filter -->
+                    <div class="pt-2 border-t-2 border-gray-100">
+                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Pilih Status Transaksi</p>
+                        <div class="flex flex-wrap bg-gray-100 p-1 rounded-lg w-fit">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="status" value="semua" class="peer hidden" {% if status_filter == 'semua' %}checked{% endif %}>
+                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Semua</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="status" value="lunas" class="peer hidden" {% if status_filter == 'lunas' %}checked{% endif %}>
+                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Lunas</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="status" value="piutang" class="peer hidden" {% if status_filter == 'piutang' %}checked{% endif %}>
+                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Piutang</div>
+                            </label>
+                        </div>
                     </div>
-                    <div class="flex flex-col gap-1 w-full sm:w-auto">
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Sampai Tanggal</label>
-                        <input name="end_date" type="date" value="{{ end_date }}" class="px-3 py-1.5 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium" />
+
+                    <!-- Apply Button -->
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="bg-primary-container text-white px-6 h-10 rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-primary transition-colors shadow-sm w-full md:w-auto justify-center">
+                            <span class="material-symbols-outlined text-sm">search</span>
+                            Terapkan Filter
+                        </button>
                     </div>
-                    <!-- Hidden status input to preserve status when filtering by date -->
-                    <input type="hidden" name="status" value="{{ status_filter }}" />
-                    <button type="submit" class="bg-primary-container text-white px-4 h-9 rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-primary transition-colors whitespace-nowrap shadow-sm">
-                        <span class="material-symbols-outlined text-sm">filter_list</span>
-                        Terapkan
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
 
             <!-- Summary Bento Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-2">
