@@ -8,29 +8,26 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Data Customer Dummy
         customers_data = [
-            {'nama': 'Budi Santoso', 'no_hp': '081234567890'},
-            {'nama': 'Siti Aminah', 'no_hp': '081298765432'},
-            {'nama': 'Agus Pratama', 'no_hp': '085612341234'},
-            {'nama': 'Dewi Lestari', 'no_hp': '087812345678'},
-            {'nama': 'Rudi Hermawan', 'no_hp': '081198761234'},
-            {'nama': 'Sri Wahyuni', 'no_hp': '089612349876'},
-            {'nama': 'Joko Widodo', 'no_hp': '082112345678'},
-            {'nama': 'Nia Ramadhani', 'no_hp': '083812341234'},
-            {'nama': 'Ahmad Fauzi', 'no_hp': '085712349876'},
-            {'nama': 'Ratna Sari', 'no_hp': '081312345678'},
+            {'nama': 'Bocil', 'no_hp': '081234567890'},
+            {'nama': 'Joko', 'no_hp': '081298765432'},
+            {'nama': 'Rino', 'no_hp': '085612341234'},
+            {'nama': 'Ari', 'no_hp': '087812345678'},
+            {'nama': 'Agung', 'no_hp': '081198761234'},
+            {'nama': 'Madon', 'no_hp': '089612349876'},
+            {'nama': 'Tarom', 'no_hp': '082112345678'},
+            {'nama': 'Dodo', 'no_hp': '083812341234'},
         ]
 
         # Data Produk Dummy (Warung)
         produk_data = [
-            {'nama': 'Beras 1 Kg', 'harga': 15000, 'kategori': 'lainnya'},
-            {'nama': 'Telur Ayam 1 Kg', 'harga': 28000, 'kategori': 'lainnya'},
-            {'nama': 'Minyak Goreng 1L', 'harga': 16000, 'kategori': 'lainnya'},
-            {'nama': 'Indomie Goreng', 'harga': 3000, 'kategori': 'makanan'},
-            {'nama': 'Indomie Kuah Soto', 'harga': 3000, 'kategori': 'makanan'},
-            {'nama': 'Gula Pasir 1 Kg', 'harga': 17000, 'kategori': 'lainnya'},
-            {'nama': 'Kopi Kapal Api Sachet', 'harga': 1500, 'kategori': 'minuman'},
-            {'nama': 'Teh Pucuk Harum', 'harga': 4000, 'kategori': 'minuman'},
-            {'nama': 'Roti Tawar', 'harga': 12000, 'kategori': 'makanan'},
+            {'nama': 'Tea Jus', 'harga': 4000, 'kategori': 'minuman'},
+            {'nama': 'Jasjus', 'harga': 4000, 'kategori': 'minuman'},
+            {'nama': 'Es Coffemix', 'harga': 5000, 'kategori': 'minuman'},
+            {'nama': 'jajanan', 'harga': 1000, 'kategori': 'makanan'},
+            {'nama': 'roti', 'harga': 2000, 'kategori': 'makanan'},
+            {'nama': 'Nutrisari', 'harga': 5000, 'kategori': 'minuman'},
+            {'nama': 'Mie Duo + Telor', 'harga': 10000, 'kategori': 'makanan'},
+            {'nama': 'Mie Duo', 'harga': 7000, 'kategori': 'makanan'},
             {'nama': 'Sabun Mandi Lifebuoy', 'harga': 4000, 'kategori': 'lainnya'},
         ]
 
