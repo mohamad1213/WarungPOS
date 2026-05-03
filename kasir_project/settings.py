@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-k*l*h()7u$4!j1*6m^4a)u(s0t8h#_q-j#^d=9z*+u=p!9k@a&
 DEBUG = True
 
 # Pada saat production (cpanel), host domain web dimasukkan di ALLOWED_HOSTS
-ALLOWED_HOSTS = ['*', 'pos.resikplus.id', 'www.pos.resikplus.id']
+ALLOWED_HOSTS = ['pos.resikplus.id', 'www.pos.resikplus.id']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
