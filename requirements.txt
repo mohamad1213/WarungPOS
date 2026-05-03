@@ -2,3 +2,4 @@ Django
 tzdata
 sqlparse
 asgiref
+whitenoise
