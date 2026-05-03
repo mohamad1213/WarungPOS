@@ -79,6 +79,7 @@ def riwayat_transaksi(request):
     start_dt = timezone.make_aware(datetime.combine(start, datetime.min.time()))
     end_dt = timezone.make_aware(datetime.combine(end, datetime.max.time()))
     transaksi = transaksi.filter(tanggal__range=[start_dt, end_dt])
+    print(transaksi)
 
     if status_filter == 'lunas':
         transaksi = transaksi.filter(status='bayar')
