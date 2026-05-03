@@ -64,19 +64,21 @@ def riwayat_transaksi(request):
         try:
             start = datetime.strptime(start_date, '%Y-%m-%d').date()
             end = datetime.strptime(end_date, '%Y-%m-%d').date()
-            transaksi = transaksi.filter(tanggal__date__range=[start, end])
         except ValueError:
             start = today - timedelta(days=7)
             end = today
-            transaksi = transaksi.filter(tanggal__date__range=[start, end])
             start_date = start.strftime('%Y-%m-%d')
             end_date = end.strftime('%Y-%m-%d')
     else:
         start = today - timedelta(days=7)
         end = today
-        transaksi = transaksi.filter(tanggal__date__range=[start, end])
         start_date = start.strftime('%Y-%m-%d')
         end_date = end.strftime('%Y-%m-%d')
+
+    # Bugfix MySQL cPanel: gunakan range datetime agar tidak bergantung pada fungsi CONVERT_TZ MySQL
+    start_dt = timezone.make_aware(datetime.combine(start, datetime.min.time()))
+    end_dt = timezone.make_aware(datetime.combine(end, datetime.max.time()))
+    transaksi = transaksi.filter(tanggal__range=[start_dt, end_dt])
 
     if status_filter == 'lunas':
         transaksi = transaksi.filter(status='bayar')
