@@ -3,3 +3,6 @@ tzdata
 sqlparse
 asgiref
 whitenoise
+python-decouple
+mysqlclient
+
