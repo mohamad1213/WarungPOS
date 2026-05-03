@@ -1,8 +1,10 @@
 import os
 import sys
 
-# Add project directory to the sys.path
 sys.path.insert(0, os.path.dirname(__file__))
 
-# Import the Django WSGI application
-from kasir_project.wsgi import application
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'kasir_project.settings')
+
+from django.core.wsgi import get_wsgi_application
+
+application = get_wsgi_application()
