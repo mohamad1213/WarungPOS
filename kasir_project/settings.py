@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k*l*h()7u$4!j1*6m^4a)u(s0t8h#_q-j#^d=9z*+u=p!9k@a&'
 
 # DEBUG diset False secara default jika tidak ada di .env (demi keamanan)
-DEBUG = True
+DEBUG = False
 
 # Pada saat production (cpanel), host domain web dimasukkan di ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*']
@@ -61,6 +61,7 @@ DATABASES = {
         'PASSWORD': 'K@takanlah123',
         'HOST': 'localhost',
         'PORT': '3306',
+        'CONN_MAX_AGE': 60, # Tahan koneksi DB selama 60 detik (Mempercepat query)
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
