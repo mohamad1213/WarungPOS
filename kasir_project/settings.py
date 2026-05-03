@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
-from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Gunakan config dari decouple untuk memanggil variable di .env
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-k*l*h()7u$4!j1*6m^4a)u(s0t8h#_q-j#^d=9z*+u=p!9k@a&')
+SECRET_KEY = 'django-insecure-k*l*h()7u$4!j1*6m^4a)u(s0t8h#_q-j#^d=9z*+u=p!9k@a&'
 
 # DEBUG diset False secara default jika tidak ada di .env (demi keamanan)
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 
 # Pada saat production (cpanel), host domain web dimasukkan di ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*', 'pos.resikplus.id', 'www.pos.resikplus.id']
