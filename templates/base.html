@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>{% block title %}Warung Ibu{% endblock %}</title>
+    <link rel="icon" href="{% static 'warung_ibu_brand_logo.png' %}" type="image/png" />
     <link rel="manifest" href="{% static 'manifest.json' %}" />
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -170,7 +171,7 @@
         <div class="flex items-center gap-10">
           <!-- Brand Logo -->
           <div class="flex items-center gap-3">
-            <img src="{% static 'img/logo.png' %}" alt="Logo Warung Ibu" class="w-10 h-10 md:w-12 md:h-12 object-contain rounded-lg" />
+            <img src="{% static 'warung_ibu_brand_logo.png' %}" alt="Logo Warung Ibu" class="w-10 h-10 md:w-12 md:h-12 object-contain rounded-lg" />
             <div>
               <h2
                 class="font-public-sans font-bold text-base md:text-lg leading-tight text-gray-900"

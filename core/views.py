@@ -115,16 +115,19 @@ def laporan_mingguan(request):
         start = today - timedelta(days=7)
         end = today
 
+    start_dt = timezone.make_aware(datetime.combine(start, datetime.min.time()))
+    end_dt = timezone.make_aware(datetime.combine(end, datetime.max.time()))
+
     # We want total transaction per customer
     customers_report = Customer.objects.annotate(
-        total_trx=Count('transaksi', filter=Q(transaksi__tanggal__date__range=[start, end])),
-        total_nominal=Sum('transaksi__total', filter=Q(transaksi__tanggal__date__range=[start, end])),
-        sudah_bayar=Count('transaksi', filter=Q(transaksi__tanggal__date__range=[start, end], transaksi__status='bayar')),
-        nanti=Count('transaksi', filter=Q(transaksi__tanggal__date__range=[start, end], transaksi__status='nanti')),
-        total_piutang=Sum('transaksi__total', filter=Q(transaksi__tanggal__date__range=[start, end], transaksi__status='nanti')),
+        total_trx=Count('transaksi', filter=Q(transaksi__tanggal__range=[start_dt, end_dt])),
+        total_nominal=Sum('transaksi__total', filter=Q(transaksi__tanggal__range=[start_dt, end_dt])),
+        sudah_bayar=Count('transaksi', filter=Q(transaksi__tanggal__range=[start_dt, end_dt], transaksi__status='bayar')),
+        nanti=Count('transaksi', filter=Q(transaksi__tanggal__range=[start_dt, end_dt], transaksi__status='nanti')),
+        total_piutang=Sum('transaksi__total', filter=Q(transaksi__tanggal__range=[start_dt, end_dt], transaksi__status='nanti')),
     ).filter(total_trx__gt=0).order_by('-total_nominal')
 
-    transaksi_range = Transaksi.objects.filter(tanggal__date__range=[start, end])
+    transaksi_range = Transaksi.objects.filter(tanggal__range=[start_dt, end_dt])
     total_lunas = transaksi_range.filter(status='bayar').aggregate(Sum('total'))['total__sum'] or 0
     total_belum_bayar = transaksi_range.filter(status='nanti').aggregate(Sum('total'))['total__sum'] or 0
     total_trx_tertunda = transaksi_range.filter(status='nanti').count()
