@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k*l*h()7u$4!j1*6m^4a)u(s0t8h#_q-j#^d=9z*+u=p!9k@a&'
 
 # DEBUG diset False secara default jika tidak ada di .env (demi keamanan)
-DEBUG = False
+DEBUG = True
 
 # Pada saat production (cpanel), host domain web dimasukkan di ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*']
@@ -90,23 +90,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'id'
-
 TIME_ZONE = 'Asia/Jakarta'
-
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 🔐 SECURITY TAMBAHAN
-CSRF_TRUSTED_ORIGINS = ['https://pos.resikplus.id']
+CSRF_TRUSTED_ORIGINS = 'https://pos.resikplus.id'
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True

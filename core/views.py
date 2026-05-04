@@ -1,10 +1,11 @@
 import json
 from datetime import datetime, timedelta
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum, Count, Q
+from django.contrib import messages
 from .models import Customer, Produk, Transaksi, DetailTransaksi
 
 def kasir_view(request):
@@ -59,9 +60,9 @@ def riwayat_transaksi(request):
     # Base query
     transaksi = Transaksi.objects.all()
 
-    if date_range_str and ' to ' in date_range_str:
+    if date_range_str and ' - ' in date_range_str:
         try:
-            start_str, end_str = date_range_str.split(' to ')
+            start_str, end_str = date_range_str.split(' - ')
             start = datetime.strptime(start_str, '%Y-%m-%d').date()
             end = datetime.strptime(end_str, '%Y-%m-%d').date()
         except ValueError:
@@ -168,7 +169,7 @@ def cetak_laporan_customer(request, customer_id):
     }
     return render(request, 'cetak_laporan.html', context)
 
-from django.shortcuts import render, redirect, get_object_or_404
+
 
 def produk_view(request):
     produks = Produk.objects.all().order_by('-id')
@@ -193,16 +194,30 @@ def tambah_produk(request):
 def edit_produk(request, pk):
     produk = get_object_or_404(Produk, pk=pk)
     if request.method == 'POST':
-        produk.nama = request.POST.get('nama')
-        produk.kategori = request.POST.get('kategori')
-        produk.harga = request.POST.get('harga')
-        produk.save()
-        return redirect('produk')
-    return render(request, 'produk_form.html', {'title': 'Edit Produk', 'produk': produk})
+        nama = request.POST.get('nama')
+        kategori = request.POST.get('kategori')
+        harga = request.POST.get('harga')
+        
+        if nama and kategori and harga:
+            produk.nama = nama
+            produk.kategori = kategori
+            produk.harga = harga
+            produk.save()
+            messages.success(request, f'Produk "{nama}" berhasil diperbarui!')
+            return redirect('produk')
+        else:
+            messages.error(request, 'Gagal memperbarui produk. Pastikan semua data terisi.')
+            
+    return render(request, 'produk_form.html', {
+        'title': 'Edit Produk',
+        'produk': produk
+    })
 
 def hapus_produk(request, pk):
     produk = get_object_or_404(Produk, pk=pk)
     if request.method == 'POST':
+        nama = produk.nama
         produk.delete()
+        messages.success(request, f'Produk "{nama}" berhasil dihapus.')
         return redirect('produk')
     return render(request, 'produk_confirm_delete.html', {'produk': produk})

@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+ <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.6.1/dist/css/coreui.min.css" rel="stylesheet" integrity="sha384-q/at3GHMpO8VjBXzZ+ymx89MhqKtK9AcxYuECgmRq1b2a3797G4sfEM/ylqgywpd" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.6.1/dist/js/coreui.bundle.min.js" integrity="sha384-bfWw6UWgmz1820GDTev34DLTN/eDwwySOsuWriOxV32ZBfwFgiPaDzvOP+vG0Yur" crossorigin="anonymous"></script>
+
 <div class="flex-1 overflow-hidden flex flex-col">
     <!-- Sub Header for Page Title -->
     <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
@@ -33,7 +36,15 @@
                     <!-- Date Range Input (Single Input via Flatpickr) -->
                     <div class="flex flex-col gap-1 w-full">
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Periode Tanggal (Pilih Rentang)</label>
-                        <input id="date-range-picker" name="date_range" type="text" value="{{ date_range }}" class="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium w-full md:max-w-sm cursor-pointer bg-gray-50" placeholder="Pilih rentang tanggal" readonly="readonly" />
+                        <input 
+                            id="date-range-picker"
+                            name="date_range"
+                            type="text"
+                            value="{{ date_range }}"
+                            data-coreui-toggle="date-range-picker"
+                            data-coreui-locale="id-ID"
+                            class="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium w-full md:max-w-sm cursor-pointer bg-gray-50"
+                            placeholder="Pilih rentang tanggal"
                     </div>
 
                     <!-- Status Filter -->
@@ -150,5 +161,17 @@
             
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateRangePicker = document.getElementById('date-range-picker');
+            const filterForm = document.querySelector('#filter-section form');
+
+            if (dateRangePicker) {
+                dateRangePicker.addEventListener('coreui.date-range-picker:change', (e) => {
+                    filterForm.querySelector('input[name="date_range"]').value = e.detail.dateString;
+                });
+            }
+        });
+    </script>
 </div>
 {% endblock %}
