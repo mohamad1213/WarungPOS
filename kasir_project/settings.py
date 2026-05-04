@@ -103,7 +103,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 🔐 SECURITY TAMBAHAN
-CSRF_TRUSTED_ORIGINS = 'https://pos.resikplus.id'
+CSRF_TRUSTED_ORIGINS = [
+    'https://pos.resikplus.id',
+    'https://www.pos.resikplus.id',
+]
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
