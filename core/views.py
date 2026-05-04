@@ -169,7 +169,9 @@ def cetak_laporan_customer(request, customer_id):
     return render(request, 'cetak_laporan.html', context)
 
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.cache import never_cache
 
+@never_cache
 def produk_view(request):
     produks = Produk.objects.all().order_by('-id')
     context = {
@@ -180,6 +182,7 @@ def produk_view(request):
     }
     return render(request, 'produk.html', context)
 
+@never_cache
 def tambah_produk(request):
     if request.method == 'POST':
         nama = request.POST.get('nama')
@@ -189,7 +192,7 @@ def tambah_produk(request):
             Produk.objects.create(nama=nama, kategori=kategori, harga=harga)
             return redirect('produk')
     return render(request, 'produk_form.html', {'title': 'Tambah Produk Baru'})
-
+@never_cache
 def edit_produk(request, pk):
     produk = get_object_or_404(Produk, pk=pk)
     if request.method == 'POST':
@@ -199,7 +202,7 @@ def edit_produk(request, pk):
         produk.save()
         return redirect('produk')
     return render(request, 'produk_form.html', {'title': 'Edit Produk', 'produk': produk})
-
+@never_cache
 def hapus_produk(request, pk):
     produk = get_object_or_404(Produk, pk=pk)
     if request.method == 'POST':
