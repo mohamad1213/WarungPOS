@@ -170,27 +170,15 @@ def cetak_laporan_customer(request, customer_id):
     }
     return render(request, 'cetak_laporan.html', context)
 
-
-from django.utils.timezone import now
+from django.db import connection
 def produk_view(request):
-    waktu = now()
-    print("TIME:", waktu)
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT COUNT(*) FROM warung_produk")
-        row = cursor.fetchone()
-        print("JUMLAH DI DB:", row)
-
-    produks = Produk.objects.all()
-    print("JUMLAH DJANGO:", produks.count())
-
-    print(produks)
+    connection.close()
     produks = Produk.objects.all().order_by('-id')
     context = {
         'produks': produks,
         'total_produk': produks.count(),
         'stok_aman': produks.count(), # dummy logic
         'stok_menipis': 0, # dummy logic
-        'now': waktu,
     }
     return render(request, 'produk.html', context)
 
