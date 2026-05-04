@@ -1,41 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
- <link href="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.6.1/dist/css/coreui.min.css" rel="stylesheet" integrity="sha384-q/at3GHMpO8VjBXzZ+ymx89MhqKtK9AcxYuECgmRq1b2a3797G4sfEM/ylqgywpd" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@5.6.1/dist/js/coreui.bundle.min.js" integrity="sha384-bfWw6UWgmz1820GDTev34DLTN/eDwwySOsuWriOxV32ZBfwFgiPaDzvOP+vG0Yur" crossorigin="anonymous"></script>
-
 <div class="flex-1 overflow-hidden flex flex-col">
-    <!-- Sub Header for Page Title -->
-    <div class="bg-white border-b border-gray-200 px-6 py-3 shrink-0">
-        <div class="max-w-[1440px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
-            <h2 class="text-xl font-black text-gray-900 font-public-sans tracking-tight">Riwayat Transaksi</h2>
-            <div class="relative w-full sm:w-64">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-outline">
+
+    <!-- Header -->
+    <div class="bg-white border-b px-6 py-4">
+        <div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-black text-gray-900">Riwayat Transaksi</h1>
+                <p class="text-sm text-gray-500">Kelola dan pantau transaksi Anda</p>
+            </div>
+
+            <!-- Search -->
+            <div class="relative w-full md:w-72">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <span class="material-symbols-outlined text-sm">search</span>
                 </span>
-                <input class="pl-9 pr-3 py-1.5 border-2 border-gray-200 rounded-lg focus:border-primary outline-none text-sm w-full" placeholder="Cari transaksi..." type="text"/>
+                <input class="pl-9 pr-3 py-2 border rounded-lg focus:border-primary outline-none text-sm w-full"
+                    placeholder="Cari transaksi..." type="text"/>
             </div>
         </div>
     </div>
 
-    <!-- Content Area -->
-    <section class="flex-1 overflow-y-auto p-4 space-y-4">
-        <div class="max-w-[1440px] mx-auto space-y-4">
-            
-            <!-- Filter Toggle Button (Always visible) -->
-            <div class="flex justify-end">
-                <button type="button" onclick="document.getElementById('filter-section').classList.toggle('hidden')" class="bg-white border-2 border-gray-200 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-gray-50 shadow-sm transition-colors text-gray-700">
-                    <span class="material-symbols-outlined text-sm">filter_list</span>
-                    Filter Tanggal & Status
-                </button>
-            </div>
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+        <div class="max-w-[1440px] mx-auto space-y-6">
 
-            <!-- Filters & Controls (Hidden by default) -->
-            <div id="filter-section" class="hidden transition-all duration-300 origin-top">
-                <form method="GET" action="{% url 'riwayat' %}" class="flex flex-col gap-4 bg-white p-4 border-2 border-gray-200 rounded-xl shadow-sm">
-                    <!-- Date Range Input (Single Input via Flatpickr) -->
-                    <div class="flex flex-col gap-1 w-full">
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Periode Tanggal (Pilih Rentang)</label>
+            <!-- FILTER (NO ACCORDION) -->
+            <div class="bg-white p-4 rounded-xl border shadow-sm">
+                <form method="GET" action="{% url 'riwayat' %}" class="grid md:grid-cols-3 gap-4 items-end">
+
+                    <!-- Date Range -->
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Periode</label>
                         <input 
                             id="date-range-picker"
                             name="date_range"
@@ -43,135 +40,107 @@
                             value="{{ date_range }}"
                             data-coreui-toggle="date-range-picker"
                             data-coreui-locale="id-ID"
-                            class="px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-primary text-sm font-medium w-full md:max-w-sm cursor-pointer bg-gray-50"
-                            placeholder="Pilih rentang tanggal"
+                            class="mt-1 w-full px-3 py-2 border rounded-lg text-sm bg-gray-50"
+                            placeholder="Pilih tanggal">
                     </div>
 
-                    <!-- Status Filter -->
-                    <div class="pt-2 border-t-2 border-gray-100">
-                        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Pilih Status Transaksi</p>
-                        <div class="flex flex-wrap bg-gray-100 p-1 rounded-lg w-fit">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="status" value="semua" class="peer hidden" {% if status_filter == 'semua' %}checked{% endif %}>
-                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Semua</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="status" value="lunas" class="peer hidden" {% if status_filter == 'lunas' %}checked{% endif %}>
-                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Lunas</div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="status" value="piutang" class="peer hidden" {% if status_filter == 'piutang' %}checked{% endif %}>
-                                <div class="px-4 py-1.5 rounded-md text-sm font-bold text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all">Piutang</div>
-                            </label>
-                        </div>
+                    <!-- Status -->
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase">Status</label>
+                        <select name="status" class="mt-1 w-full px-3 py-2 border rounded-lg text-sm">
+                            <option value="semua" {% if status_filter == 'semua' %}selected{% endif %}>Semua</option>
+                            <option value="lunas" {% if status_filter == 'lunas' %}selected{% endif %}>Lunas</option>
+                            <option value="piutang" {% if status_filter == 'piutang' %}selected{% endif %}>Piutang</option>
+                        </select>
                     </div>
 
-                    <!-- Apply Button -->
-                    <div class="flex justify-end pt-2">
-                        <button type="submit" class="bg-primary-container text-white px-6 h-10 rounded-lg text-sm font-bold flex items-center gap-1.5 hover:bg-primary transition-colors shadow-sm w-full md:w-auto justify-center">
-                            <span class="material-symbols-outlined text-sm">search</span>
+                    <!-- Button -->
+                    <div class="flex md:justify-end">
+                        <button type="submit"
+                            class="bg-primary text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition w-full md:w-auto">
                             Terapkan Filter
                         </button>
                     </div>
+
                 </form>
             </div>
 
-            <!-- Summary Bento Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pb-2">
-                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl flex flex-col justify-between shadow-sm">
-                    <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Pemasukan</p>
-                        <h3 class="text-2xl font-black text-primary">Rp {{ total_pemasukan|floatformat:0 }}</h3>
-                    </div>
-                    <div class="mt-3 flex items-center gap-1.5 text-green-600 font-bold text-xs">
-                        <span class="material-symbols-outlined text-sm">check_circle</span>
-                        <span>Transaksi Lunas</span>
-                    </div>
+            <!-- SUMMARY -->
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-xl border shadow-sm">
+                    <p class="text-xs text-gray-400">Total Pemasukan</p>
+                    <h3 class="text-xl font-black text-primary">Rp {{ total_pemasukan|floatformat:0 }}</h3>
                 </div>
-                <div class="bg-white p-4 border-2 border-gray-100 rounded-xl flex flex-col justify-between shadow-sm">
-                    <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Piutang</p>
-                        <h3 class="text-2xl font-black text-error">Rp {{ total_piutang|floatformat:0 }}</h3>
-                    </div>
-                    <div class="mt-3 flex items-center gap-1.5 text-red-500 font-bold text-xs">
-                        <span class="material-symbols-outlined text-sm">warning</span>
-                        <span>Belum Lunas</span>
-                    </div>
+
+                <div class="bg-white p-4 rounded-xl border shadow-sm">
+                    <p class="text-xs text-gray-400">Total Piutang</p>
+                    <h3 class="text-xl font-black text-red-500">Rp {{ total_piutang|floatformat:0 }}</h3>
                 </div>
-                <div class="bg-primary p-4 border-2 border-primary rounded-xl text-white shadow-sm flex flex-col justify-between">
-                    <p class="text-[10px] font-bold text-primary-fixed-dim uppercase tracking-widest mb-1">Total Aktivitas</p>
-                    <div class="flex items-end justify-between mb-3">
-                        <h3 class="text-2xl font-black">{{ total_transaksi }} Trx</h3>
-                    </div>
-                    <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-                        <div class="bg-secondary-fixed h-full w-[100%]"></div>
-                    </div>
+
+                <div class="bg-primary text-white p-4 rounded-xl shadow-sm">
+                    <p class="text-xs opacity-80">Total Transaksi</p>
+                    <h3 class="text-xl font-black">{{ total_transaksi }} Trx</h3>
                 </div>
             </div>
 
-            <!-- Transaction List Table Style -->
-            <div class="bg-white border-2 border-gray-100 rounded-xl overflow-hidden shadow-sm">
-                <div class="hidden lg:grid grid-cols-6 bg-gray-50 border-b-2 border-gray-100 px-4 py-3">
-                    <div class="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Tanggal & Waktu</div>
-                    <div class="font-bold text-gray-500 uppercase text-[10px] tracking-wider col-span-2">Nama Pelanggan</div>
-                    <div class="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Metode</div>
-                    <div class="font-bold text-gray-500 uppercase text-[10px] tracking-wider">Total Transaksi</div>
-                    <div class="font-bold text-gray-500 uppercase text-[10px] tracking-wider text-right">Status</div>
-                </div>
-                <div class="divide-y-2 divide-gray-50">
-                    {% for trx in transaksi_list %}
-                    <div class="grid grid-cols-1 lg:grid-cols-6 px-4 py-3 items-center hover:bg-blue-50/30 transition-colors gap-3 lg:gap-0">
-                        <div class="flex flex-col">
-                            <p class="font-bold text-gray-900 text-sm">{{ trx.tanggal|date:"d M Y" }}</p>
-                            <p class="text-[11px] text-gray-500">{{ trx.tanggal|date:"H:i" }} WIB</p>
-                        </div>
-                        <div class="lg:col-span-2 flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold text-xs border border-gray-100">
-                                {% if trx.customer %}
-                                    {{ trx.customer.nama|slice:":2"|upper }}
-                                {% else %}
-                                    U
-                                {% endif %}
-                            </div>
-                            <p class="font-bold text-gray-900 text-sm">{% if trx.customer %}{{ trx.customer.nama }}{% else %}Umum{% endif %}</p>
-                        </div>
-                        <div class="flex items-center lg:block">
-                            {% if trx.status == 'bayar' %}
-                                <span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded text-[10px] font-bold">Tunai</span>
-                            {% else %}
-                                <span class="px-2 py-0.5 bg-gray-200 text-gray-600 rounded text-[10px] font-bold">Bon</span>
-                            {% endif %}
-                        </div>
-                        <div class="font-bold text-primary text-sm">Rp {{ trx.total|floatformat:0 }}</div>
-                        <div class="lg:text-right">
-                            {% if trx.status == 'bayar' %}
-                                <span class="px-3 py-1 bg-green-100 text-green-700 border border-green-200 rounded-md font-bold text-[11px] inline-block">Lunas</span>
-                            {% else %}
-                                <span class="px-3 py-1 bg-error-container text-error border border-error rounded-md font-bold text-[11px] inline-block">Piutang</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="p-6 text-center text-gray-400 text-xs">
-                        Belum ada transaksi pada periode atau status yang dipilih.
-                    </div>
-                    {% endfor %}
+            <!-- TABLE -->
+            <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                            <tr>
+                                <th class="p-3 text-left">Tanggal</th>
+                                <th class="p-3 text-left">Pelanggan</th>
+                                <th class="p-3">Metode</th>
+                                <th class="p-3">Total</th>
+                                <th class="p-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y">
+                            {% for trx in transaksi_list %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="p-3">
+                                    <div class="font-bold">{{ trx.tanggal|date:"d M Y" }}</div>
+                                    <div class="text-xs text-gray-400">{{ trx.tanggal|date:"H:i" }}</div>
+                                </td>
+
+                                <td class="p-3 font-bold">
+                                    {% if trx.customer %}{{ trx.customer.nama }}{% else %}Umum{% endif %}
+                                </td>
+
+                                <td class="p-3 text-center">
+                                    {% if trx.status == 'bayar' %}
+                                        <span class="text-green-600 font-bold">Tunai</span>
+                                    {% else %}
+                                        <span class="text-gray-500 font-bold">Bon</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="p-3 font-bold text-primary">
+                                    Rp {{ trx.total|floatformat:0 }}
+                                </td>
+
+                                <td class="p-3 text-right">
+                                    {% if trx.status == 'bayar' %}
+                                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded text-xs font-bold">Lunas</span>
+                                    {% else %}
+                                        <span class="bg-red-100 text-red-600 px-3 py-1 rounded text-xs font-bold">Piutang</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center p-6 text-gray-400">
+                                    Tidak ada data transaksi
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            
+
         </div>
-    </section>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dateRangePicker = document.getElementById('date-range-picker');
-            const filterForm = document.querySelector('#filter-section form');
-
-            if (dateRangePicker) {
-                dateRangePicker.addEventListener('coreui.date-range-picker:change', (e) => {
-                    filterForm.querySelector('input[name="date_range"]').value = e.detail.dateString;
-                });
-            }
-        });
-    </script>
+    </main>
 </div>
 {% endblock %}
