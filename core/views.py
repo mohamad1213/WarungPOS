@@ -7,7 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Sum, Count, Q
 from django.contrib import messages
 from .models import Customer, Produk, Transaksi, DetailTransaksi
-
+from django.db import connection
+from django.http import HttpResponse
 def kasir_view(request):
     customers = Customer.objects.all()
     produks = Produk.objects.all()
@@ -170,14 +171,26 @@ def cetak_laporan_customer(request, customer_id):
     return render(request, 'cetak_laporan.html', context)
 
 
-
+from django.utils.timezone import now
 def produk_view(request):
+    waktu = now()
+    print("TIME:", waktu)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) FROM warung_produk")
+        row = cursor.fetchone()
+        print("JUMLAH DI DB:", row)
+
+    produks = Produk.objects.all()
+    print("JUMLAH DJANGO:", produks.count())
+
+    print(produks)
     produks = Produk.objects.all().order_by('-id')
     context = {
         'produks': produks,
         'total_produk': produks.count(),
         'stok_aman': produks.count(), # dummy logic
         'stok_menipis': 0, # dummy logic
+        'now': waktu,
     }
     return render(request, 'produk.html', context)
 
@@ -188,7 +201,7 @@ def tambah_produk(request):
         harga = request.POST.get('harga')
         if nama and kategori and harga:
             Produk.objects.create(nama=nama, kategori=kategori, harga=harga)
-            return redirect('produk')
+            return HttpResponse("UPDATED")
     return render(request, 'produk_form.html', {'title': 'Tambah Produk Baru'})
 
 def edit_produk(request, pk):
